@@ -1,0 +1,33 @@
+site_name: uTopia Roleplay
+repo_url: https://github.com/lucajjj/test123/tree/gh-pages
+theme:
+  name: material
+  language: nl
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  icon:
+    repo: fontawesome/brands/git-alt 
+  plugins:
+    - offline
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to dark mode
+        primary: black
+    - scheme: slate 
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+nav:
+  - Home: "index.md"
+  - Server Regels: "apv.md"
+  - Het Wetboek: "wetboekv2.md"
+  - Onderwereld Regels: "onderwereld.md"
+  - Overvallen: "overvallen.md"
+  - Luchtruim Regels: "vliegregels.md"
+  - Refund Regels: "refund.md"
+  - Offroad Regels: "offroad.md"
+  - Donatie Regels: "lootbox.md"
+extra_css:
+  - stylesheets/extra.css
