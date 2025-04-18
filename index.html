@@ -1,36 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
-  <title>Discord Avatar ophalen</title>
+  <meta charset="UTF-8">
+  <title>Discord Profielfoto Viewer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #2c2f33;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: #23272a;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      text-align: center;
+      width: 350px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      background-color: #7289da;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #5b6eae;
+    }
+    .avatar {
+      margin-top: 20px;
+    }
+    .avatar img {
+      border-radius: 50%;
+      width: 128px;
+      height: 128px;
+      border: 3px solid #7289da;
+    }
+    .error {
+      color: #ff5555;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <a href="https://discord.com/api/oauth2/authorize?client_id=JOUW_CLIENT_ID&redirect_uri=JOUW_REDIRECT_URI&response_type=token&scope=identify">
-    Login met Discord
-  </a>
+  <div class="container">
+    <h2>Discord Avatar Viewer</h2>
+    <input type="text" id="userId" placeholder="Discord ID">
+    <input type="text" id="avatarHash" placeholder="Avatar hash">
+    <button onclick="toonAvatar()">Toon avatar</button>
 
-  <div id="avatar"></div>
+    <div class="avatar" id="avatarContainer"></div>
+    <div class="error" id="errorMsg"></div>
+  </div>
 
   <script>
-    window.onload = () => {
-      const hash = window.location.hash;
-      if (hash.includes('access_token')) {
-        const params = new URLSearchParams(hash.substring(1));
-        const token = params.get('access_token');
+    function toonAvatar() {
+      const userId = document.getElementById('userId').value.trim();
+      const avatarHash = document.getElementById('avatarHash').value.trim();
+      const avatarContainer = document.getElementById('avatarContainer');
+      const errorMsg = document.getElementById('errorMsg');
+      avatarContainer.innerHTML = '';
+      errorMsg.textContent = '';
 
-        fetch('https://discord.com/api/users/@me', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then(res => res.json())
-        .then(user => {
-          const avatarUrl = user.avatar 
-            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-            : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
-          document.getElementById('avatar').innerHTML = `<img src="${avatarUrl}" alt="Avatar" width="128"/>`;
-        });
+      if (!userId || !avatarHash) {
+        errorMsg.textContent = 'Vul zowel een ID als een avatar hash in.';
+        return;
       }
-    };
+
+      const url = `https://cdn.discordapp.com/avatars/${userId}/${avatarHash}.png`;
+
+      const img = new Image();
+      img.onload = () => {
+        avatarContainer.innerHTML = `<img src="${url}" alt="Avatar">`;
+      };
+      img.onerror = () => {
+        errorMsg.textContent = 'Ongeldige ID of avatar hash. Controleer je invoer.';
+      };
+      img.src = url;
+    }
   </script>
 </body>
 </html>
