@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Discord Avatar ophalen</title>
+</head>
+<body>
+  <a href="https://discord.com/api/oauth2/authorize?client_id=JOUW_CLIENT_ID&redirect_uri=JOUW_REDIRECT_URI&response_type=token&scope=identify">
+    Login met Discord
+  </a>
+
+  <div id="avatar"></div>
+
+  <script>
+    window.onload = () => {
+      const hash = window.location.hash;
+      if (hash.includes('access_token')) {
+        const params = new URLSearchParams(hash.substring(1));
+        const token = params.get('access_token');
+
+        fetch('https://discord.com/api/users/@me', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        .then(res => res.json())
+        .then(user => {
+          const avatarUrl = user.avatar 
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+            : `https://cdn.discordapp.com/embed/avatars/${user.discriminator % 5}.png`;
+          document.getElementById('avatar').innerHTML = `<img src="${avatarUrl}" alt="Avatar" width="128"/>`;
+        });
+      }
+    };
+  </script>
+</body>
+</html>
